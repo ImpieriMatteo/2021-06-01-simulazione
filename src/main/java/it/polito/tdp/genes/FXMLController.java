@@ -5,10 +5,14 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Genes;
+import it.polito.tdp.genes.model.Interazione;
 import it.polito.tdp.genes.model.Model;
+import it.polito.tdp.genes.model.Simulatore;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,6 +23,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 	
 	private Model model;
+	private Simulatore sim;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -30,7 +35,7 @@ public class FXMLController {
     private Button btnCreaGrafo; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbGeni"
-    private ComboBox<?> cmbGeni; // Value injected by FXMLLoader
+    private ComboBox<Genes> cmbGeni; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnGeniAdiacenti"
     private Button btnGeniAdiacenti; // Value injected by FXMLLoader
@@ -46,19 +51,64 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	this.txtResult.clear();
     	
+    	String result = this.model.creaGrafo();
 
+    	this.txtResult.appendText(result+"\n\n");
+    	this.btnGeniAdiacenti.setDisable(false);
+    	
+    	this.cmbGeni.getItems().addAll(this.model.getVertex());
     }
 
     @FXML
     void doGeniAdiacenti(ActionEvent event) {
-
     	
+    	Genes scelto = this.cmbGeni.getValue();
+    	if(scelto==null) {
+    		this.txtResult.appendText("Devi prima scegliere un GENE!!");
+    		return;
+    	}
+    	
+    	List<Interazione> result = this.model.getAdiacenti(scelto);
+    	
+    	this.txtResult.appendText("Geni adiacenti a: "+scelto.toString()+"\n");
+    	for(Interazione i : result)
+    		this.txtResult.appendText(i.toString());
+    	
+    	this.txtResult.appendText("\n");
+    	this.btnSimula.setDisable(false);
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	this.txtResult.clear();
 
+    	Integer N;
+    	try {
+    		N = Integer.parseInt(this.txtIng.getText());
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.appendText("Devi inserire un numero INTERO!!");
+    		return;
+    	}
+    	
+    	Genes scelto = this.cmbGeni.getValue();
+    	if(scelto==null) {
+    		this.txtResult.appendText("Devi prima scegliere un GENE!!");
+    		return;
+    	}
+    	
+    	this.sim = new Simulatore();
+    	
+    	this.sim.init(N, scelto, this.model);
+    	this.sim.simula();
+    	
+    	Map<Genes, Integer> geniInStudio = this.sim.getGeniInStudio();
+    	
+    	this.txtResult.appendText("Risultati alla fine della simulazione: \n\n");
+    	for(Genes g : geniInStudio.keySet()) 
+    		this.txtResult.appendText(g.toString()+" - Ingegneri: "+geniInStudio.get(g)+"\n");
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

@@ -57,7 +57,7 @@
                         <Insets />
                      </GridPane.margin>
                   </ComboBox>
-                  <Button fx:id="btnGeniAdiacenti" mnemonicParsing="false" onAction="#doGeniAdiacenti" prefHeight="25.0" prefWidth="100.0" text="Geni Adiacenti" GridPane.columnIndex="2">
+                  <Button fx:id="btnGeniAdiacenti" disable="true" mnemonicParsing="false" onAction="#doGeniAdiacenti" prefHeight="25.0" prefWidth="100.0" text="Geni Adiacenti" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin>
@@ -68,7 +68,7 @@
                      </GridPane.margin>
                   </Label>
                   <TextField fx:id="txtIng" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button fx:id="btnSimula" mnemonicParsing="false" onAction="#doSimula" prefHeight="25.0" prefWidth="100.0" text="Simulazione" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button fx:id="btnSimula" disable="true" mnemonicParsing="false" onAction="#doSimula" prefHeight="25.0" prefWidth="100.0" text="Simulazione" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin>
